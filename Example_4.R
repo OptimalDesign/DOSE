@@ -48,14 +48,14 @@ resp2 <- function(x, a, b){
 CRLAS <- function(x, N, A, C, bk, a, b, crit="D", type="exact", w0=NULL){
   # function for computing constrained exact designs in CR model
   # x: set of doses
-  # S: support size
   # N: size of the design
-  # a,b: parameter values
-  # w0: design to be augmented
-  
   # A: linear constraints ... K*n matrix
   # C: 'level of sparsity' constraints ... K*n matrix
   # bk: the ride side of constraints Aw + C*sw <= bk
+  # a,b: parameter values
+  # crit: optimality criterion
+  # type: "exact" or "approximate"
+  # w0: design to be augmented
   
   lx <- length(x)
   
@@ -84,17 +84,17 @@ CRLAS <- function(x, N, A, C, bk, a, b, crit="D", type="exact", w0=NULL){
   A32 <- c(rep(1, lx), rep(0, 2*lx))
   b32 <- N
   
-  # w(yi) \in {0,1} (9)
+  # w(zi) \in {0,1} (7)
   A11 <- cbind( matrix(rep(0, 2*lx^2), ncol = 2*lx, nrow = lx), diag(lx) )
   b11 <- rep(1, lx)
   
-  # w(xi, 1) <= N*w(yi) (7)
+  # w(xi, 1) <= N*w(zi) (9)
   a12 <- c(1, -N)
   A12 <- matrix(0, nrow=lx, ncol=3*lx)
   for(i in 1:lx) A12[i, c(i, 2*lx+i)] <- a12
   b12 <- rep(0, lx)
   
-  # w(yi) <= w(xi, 1) (7)
+  # w(zi) <= w(xi, 1) (9)
   a14 <- c(-1, 1)
   A14 <- matrix(0, nrow = lx, ncol = 3*lx)
   for(i in 1:lx) A14[i, c(i, 2*lx+i)] <- a14
@@ -137,11 +137,11 @@ CRLAS <- function(x, N, A, C, bk, a, b, crit="D", type="exact", w0=NULL){
 #--------------- Example in Chapter 4--------------------------#
 
 # Initial parameter settings
-a <- c(-9.5,-9.1)
-b <- c(0.12,0.33)
-x <- seq(0, 100, length=101)
-n <- length(x)
-N <- 100
+a <- c(-9.5,-9.1)  #parameters of the CR model 
+b <- c(0.12,0.33)  #parameters of the CR model
+x <- seq(0, 100, length=101)  #doses
+n <- length(x)  #number of doses
+N <- 100  #limit on the number of patients
 
 type <- "exact"
 crit <- "D"
@@ -465,5 +465,6 @@ p5 <- ggplot(df, aes(x = x_jitter, xend = x_jitter, y = 0, yend = value, color =
 
 library(gridExtra)
 grid.arrange(p0, p1, p2, p3, p4, p5, nrow=6)
+
 
 
