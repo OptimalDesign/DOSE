@@ -294,31 +294,11 @@ total_costs_5 <- expected_costs_5 + overhead_costs_5
 c(Phi_1/Phi_0, Phi_2/Phi_0, Phi_3/Phi_0, Phi_4/Phi_0, Phi_5/Phi_0)
 
 
-#### plots ####
+#---------- Generating Figure 1-----------------------------------#
 
 library(ggplot2)
 library(tidyr)
 library(dplyr)
-
-l <- cbind(x, res_0$w.best, res_1$w.best, res_2$w.best, res_3$w.best, res_4$w.best, res_5$w.best)
-l <- as.data.frame(l)
-names(l) <- c("x", "w0", "w1", "w2", "w3", "w4", "w5")
-
-df <- pivot_longer(l, cols = -x, names_to = "design", values_to = "value")
-
-df$x_jitter <- as.numeric(df$x) + (as.numeric(factor(df$design)) - 3) * 0.1 
-
-df_nonzero <- df %>% filter(value != 0)
-
-ggplot(df_nonzero, aes(x = x_jitter, y = value, color = design, group = design)) +
-  geom_line(size = 1, linetype = "dashed") +   # Dashed lines
-  geom_point(size = 6) +  # Show only nonzero points
-  scale_x_continuous(breaks = l$x[l$x %% 5 == 0], labels = l$x[l$x %% 5 == 0]) +  
-  labs(x = "Dose", y = "Weight") +  
-  theme_minimal()
-
-#---------- Generating Figure 1-----------------------------------#
-
 
 #0
 l <- cbind(x,res_0$w.best)
@@ -465,6 +445,7 @@ p5 <- ggplot(df, aes(x = x_jitter, xend = x_jitter, y = 0, yend = value, color =
 
 library(gridExtra)
 grid.arrange(p0, p1, p2, p3, p4, p5, nrow=6)
+
 
 
 
