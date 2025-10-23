@@ -1,10 +1,13 @@
 library(OptimalDesign)
 
-#---------------- helper functions ---------------------#
+#--------------------------------------------------------
+#---------------- helper functions ----------------------
+#--------------------------------------------------------
 
 ContF <- function(x, a, b){
   # elementary information matrices for continuation ratio (CR) model in dose x
-  # parameter values a=(a1,a2), b=(b1,b2)
+  # x: the dose
+  # a,b: parameter values of the CR model a=(a1,a2), b=(b1,b2)
   
   e1 <- exp(a[1]+b[1]*x)
   e2 <- exp(a[2]+b[2]*x)
@@ -26,7 +29,10 @@ ContF <- function(x, a, b){
 }
 
 resp <- function(x, a, b){
-  #the response of CR model in the form of list
+  # the response of CR model in the form of list
+  # x: the dose
+  # a,b: parameter values of the CR model a=(a1,a2), b=(b1,b2)
+  
   e1 <- exp(a[1]+b[1]*x)
   e2 <- exp(a[2]+b[2]*x)
   p1 <- 1/(1+e1) * 1/(1+e2) # ... p0 ... no reaction
@@ -37,6 +43,9 @@ resp <- function(x, a, b){
 
 resp2 <- function(x, a, b){
   #the response of CR model in the form of vector
+  # x: the dose
+  # a,b: parameter values of the CR model a=(a1,a2), b=(b1,b2)
+  
   e1 <- exp(a[1]+b[1]*x)
   e2 <- exp(a[2]+b[2]*x)
   p1 <- 1/(1+e1) * 1/(1+e2) # ... p0 ... no reaction
@@ -45,17 +54,21 @@ resp2 <- function(x, a, b){
   return(c(p1,p2,p3))
 }
 
+#------------------------------------------------------
+#---------------- main function -----------------------
+#------------------------------------------------------
+
 CRLAS <- function(x, N, A, C, bk, a, b, crit="D", type="exact", w0=NULL){
   # function for computing constrained exact designs in CR model
-  # x: set of doses
-  # N: size of the design
-  # A: linear constraints ... K*n matrix
-  # C: 'level of sparsity' constraints ... K*n matrix
-  # bk: the ride side of constraints Aw + C*sw <= bk
-  # a,b: parameter values of the CR model
-  # crit: optimality criterion
-  # type: "exact" or "approximate"
-  # w0: design to be augmented
+  # x: set of doses (size-n vector)
+  # N: size of the design (integer)
+  # A: linear constraints (K*n matrix)
+  # C: 'level of sparsity' constraints (K*n matrix)
+  # bk: the ride side of constraints Aw + C*sw <= bk (size-2K vector)
+  # a,b: parameter values of the CR model (size-2 vectors, a=(a1,a2), b=(b1,b2))
+  # crit: optimality criterion ("D", "A" or "I")
+  # type: type of the design to be computed ("exact" or "approximate")
+  # w0: design to be augmented (size-n vector)
   
   lx <- length(x)
   
@@ -133,24 +146,24 @@ CRLAS <- function(x, N, A, C, bk, a, b, crit="D", type="exact", w0=NULL){
   return(list(res=res, w.best=w.best, xsupp=xsupp, w.supp=w.supp)) 
 }
 
-#--------------- Example in Section 5 --------------------------#
+#----------------------------------------------------------------
+#--------------- Example in Section 5 ---------------------------
+#----------------------------------------------------------------
 
 # Initial parameter settings
-a <- c(-9.5,-9.1)  #parameters of the CR model 
-b <- c(0.12,0.33)  #parameters of the CR model
-x <- seq(0, 100, length=101)  #doses
-n <- length(x)  #number of doses
-N <- 100  #limit on the number of patients
+a <- c(-9.5,-9.1)  # parameters of the CR model 
+b <- c(0.12,0.33)  # parameters of the CR model
+x <- seq(0, 100, length=101)  # vector of doses
+n <- length(x)  # number of doses
+N <- 100  # limit on the number of patients
 
 type <- "exact"
 crit <- "D"
 ps <- resp(x, a, b)
-pf <- ps$p1 + ps$p3 # probability of failure
+pf <- ps$p1 + ps$p3  # probability of failure
 
 ps2 <- resp2(x[1], a, b)
-for(i in 2:n){
-  ps2 <- rbind(ps2, resp2(x[i], a, b))
-}
+for(i in 2:n) ps2 <- rbind(ps2, resp2(x[i], a, b))
 
 # Additional costs based on the output of the experiment
 
@@ -163,7 +176,7 @@ expected_costs
 overhead_costs <- 0.4*x # manufacturing costs 
 overhead_costs
 
-#### No constraints, D-optimality ####
+#### Size constraint only (N=100) ####
 
 A <- matrix(0)
 C <- matrix(0)
@@ -177,7 +190,7 @@ expected_costs_0 <- expected_costs %*% res_0$w.best # cost of the experiment
 overhead_costs_0 <- sum(overhead_costs %*% (res_0$w.best!=0)) 
 total_costs_0 <- expected_costs_0 + overhead_costs_0
 
-#### Expected number of failures ####
+#### Expected number of failures, Sec. 5.1.1 ####
 
 A1 <- t(as.matrix(pf))
 C1 <- t(as.matrix(rep(0, n)))
@@ -196,7 +209,7 @@ expected_costs_1 <- expected_costs %*% res_1$w.best
 overhead_costs_1 <- sum(overhead_costs %*% (res_1$w.best!=0)) 
 total_costs_1 <- expected_costs_1 + overhead_costs_1
 
-#### Constraint on the total costs of the experiment
+#### Constraint on the total costs of the experiment, Sec. 5.1.2. ####
 
 A2 <- expected_costs
 C2 <- overhead_costs
@@ -216,7 +229,7 @@ expected_costs_2 <- expected_costs %*% res_2$w.best
 overhead_costs_2 <- sum(overhead_costs %*% (res_2$w.best!=0)) 
 total_costs_2 <- expected_costs_2 + overhead_costs_2
 
-#### Minimal support size ####
+#### Minimal support size, Sec. 5.1.3 ####
 
 S <- 6
 A3 <- t(rep(0,n))
@@ -236,10 +249,9 @@ expected_costs_3 <- expected_costs %*% res_3$w.best
 overhead_costs_3 <- sum(overhead_costs %*% (res_3$w.best!=0))
 total_costs_3 <- expected_costs_3 + overhead_costs_3
 
-#### Space filling ####
+#### Space filling, Sec. 5.1.4 ####
 
-space <- 10
-
+space <- 10 # the required spacing of the doses
 spaces <- rep(1, space) # a sequence of ones
 C4 <- matrix(0, nrow = n - space + 1, ncol = n)
 for(i in 1:nrow(C4)){
@@ -263,10 +275,10 @@ expected_costs_4 <- expected_costs %*% res_4$w.best
 overhead_costs_4 <- sum(overhead_costs %*% (res_4$w.best!=0)) 
 total_costs_4 <- expected_costs_4 + overhead_costs_4
 
-#### Minimal and maximal number of replications ####
+#### Minimal and maximal number of replications, Sec. 5.1.5. ####
 
-L <- 10
-U <- 25
+L <- 10 # lower limit on the number of replications
+U <- 25 # upper limit on the number of replications
 
 A5 <- -diag(n)
 C5 <- L*diag(n)
@@ -444,6 +456,7 @@ p5 <- ggplot(df, aes(x = x_jitter, xend = x_jitter, y = 0, yend = value, color =
 
 library(gridExtra)
 grid.arrange(p0, p1, p2, p3, p4, p5, nrow=6)
+
 
 
 
