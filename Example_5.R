@@ -4,7 +4,7 @@ library(OptimalDesign)
 
 ContF <- function(x, a, b){
   # elementary information matrices for continuation ratio (CR) model in dose x
-  # parameter values a=c(a1,a2), b=c(b1,b2)
+  # parameter values a=(a1,a2), b=(b1,b2)
   
   e1 <- exp(a[1]+b[1]*x)
   e2 <- exp(a[2]+b[2]*x)
@@ -52,7 +52,7 @@ CRLAS <- function(x, N, A, C, bk, a, b, crit="D", type="exact", w0=NULL){
   # A: linear constraints ... K*n matrix
   # C: 'level of sparsity' constraints ... K*n matrix
   # bk: the ride side of constraints Aw + C*sw <= bk
-  # a,b: parameter values
+  # a,b: parameter values of the CR model
   # crit: optimality criterion
   # type: "exact" or "approximate"
   # w0: design to be augmented
@@ -69,7 +69,6 @@ CRLAS <- function(x, N, A, C, bk, a, b, crit="D", type="exact", w0=NULL){
   # Add zero regressors for y-s
   Fx <- rbind(Fx.odd, Fx.even, matrix(rep(0, 4*lx), nrow = lx, ncol = 4))
   
-  #for (i in 1:lx) Fx[(4*i-1):(4*i),] <- Fx[(4*i-3):(4*i-2),]
   
   #equality constraints for the multiresponse model
   # w(x_i,1) = w(x_i, 2) = ... = w(x_i, r) (5)
@@ -445,6 +444,7 @@ p5 <- ggplot(df, aes(x = x_jitter, xend = x_jitter, y = 0, yend = value, color =
 
 library(gridExtra)
 grid.arrange(p0, p1, p2, p3, p4, p5, nrow=6)
+
 
 
 
