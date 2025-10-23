@@ -23,7 +23,7 @@ However, the code can be modified to different multivariate models, criteria and
 4. Select the required size of the experiments (the number of trials/runs)
 5. Compute the optimal exact design for the required size 
 6. Inspect the resulting design from the point of view of additional required limits to identify the ones that are violated
-7. Sequentially add the limits while, after each step, checking for the violation of the remaining constraints.
+7. Sequentially add the limits while, after each step, checking for the violation of the remaining constraints until an exact design satisfying all of the required constraints is achieved.
 
 
 The primary function for computing the exact design is `CRLAS`. The arguments are following:
@@ -32,9 +32,10 @@ The primary function for computing the exact design is `CRLAS`. The arguments ar
 - `N`: size of the design, i.e., the total number of the subjects available
 - `A`: K*n matrix of linear constraints
 - `C`: K*n matrix of sparsity constraints
-- `bk`: the right-hand size of linear and sparsity constraints
-     both type of constraints are generated jointly in the form `A*w + C*sw <= bk`
-	 where `w` is size-n design vector of number of measurements in the correponding factor levels defined in `x` 
+- `bk`: the right-hand size of linear and sparsity constraints.
+     Both types of constraints are generated jointly in the form `A*w + C*sw <= bk`,
+	 where `w` is size-n design vector of number of measurements in the correponding factor levels defined in `x`.
+     In the context of the step 7 above, the limits are added sequentially and then "stitched together" into matrices `A` and `C` (see the code for generating Example 5 for specific cases) 
 - `a,b`: parameter values of the CR model needed for computing the locally optimal design
 - `crit`: optimality criterion: "D", "A", or "I"
 - `type`: defines whether exact or approximate design is computed
