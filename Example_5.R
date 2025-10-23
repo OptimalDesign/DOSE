@@ -134,7 +134,7 @@ CRLAS <- function(x, N, A, C, bk, a, b, crit="D", type="exact", w0=NULL){
   return(list(res=res, w.best=w.best, xsupp=xsupp, w.supp=w.supp)) 
 }
 
-#--------------- Example in Chapter 4--------------------------#
+#--------------- Example in Section 5 --------------------------#
 
 # Initial parameter settings
 a <- c(-9.5,-9.1)  #parameters of the CR model 
@@ -445,6 +445,7 @@ p5 <- ggplot(df, aes(x = x_jitter, xend = x_jitter, y = 0, yend = value, color =
 
 library(gridExtra)
 grid.arrange(p0, p1, p2, p3, p4, p5, nrow=6)
+
 
 
 
