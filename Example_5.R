@@ -64,7 +64,7 @@ CRLAS <- function(x, N, A, C, bk, a, b, crit="D", type="exact", w0=NULL){
   # N: size of the design (integer)
   # A: linear constraints (K*n matrix)
   # C: 'level of sparsity' constraints (K*n matrix)
-  # bk: the ride side of constraints Aw + C*sw <= bk (size-2K vector)
+  # bk: the right side of constraints Aw + C*sw <= bk (size-2K vector)
   # a,b: parameter values of the CR model (size-2 vectors, a=(a1,a2), b=(b1,b2))
   # crit: optimality criterion ("D", "A" or "I")
   # type: type of the design to be computed ("exact" or "approximate")
@@ -456,6 +456,7 @@ p5 <- ggplot(df, aes(x = x_jitter, xend = x_jitter, y = 0, yend = value, color =
 
 library(gridExtra)
 grid.arrange(p0, p1, p2, p3, p4, p5, nrow=6)
+
 
 
 
