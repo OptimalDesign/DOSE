@@ -34,7 +34,7 @@ The primary function for computing the exact design is `CRLAS`. The arguments ar
 - `C`: K*n matrix of sparsity constraints
 - `bk`: the right-hand size of linear and sparsity constraints.
      Both types of constraints are generated jointly in the form `A*w + C*sw <= bk`,
-	 where `w` is size-n design vector of number of measurements in the correponding factor levels defined in `x`.
+	 where `w` is size-n design vector of number of measurements in the corresponding factor levels defined in `x`.
      In the context of the step 7 above, the limits are added sequentially and then "stitched together" into matrices `A` and `C` (see the code for generating Example 5 for specific cases) 
 - `a,b`: parameter values of the CR model needed for computing the locally optimal design
 - `crit`: optimality criterion: "D", "A", or "I"
