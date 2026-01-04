@@ -69,6 +69,8 @@ Windows:
 macOS / Linux:
 `~/gurobi.lic`
 
+**IMPORTANT**: It is necessary that you do this step while connected to an academic network, e.g., in your workplace or through eduroam. In our experience, connecting through VPN is not enough, although this may vary depending on the institution. 
+
 
 ## 3. Installing the Gurobi R Interface
 ### 3.1 Start R
@@ -181,6 +183,7 @@ Restart R and try again
 Restart RStudio
 
 Ensure R and Gurobi are both 64-bit
+
 
 
 
