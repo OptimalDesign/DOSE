@@ -182,15 +182,5 @@ Restart RStudio
 
 Ensure R and Gurobi are both 64-bit
 
-## 7. Summary Checklist
 
-Before reporting an installation problem, verify:
-
-gurobi_cl works in terminal
-
-License installed and valid
-
-library(gurobi) works in R
-
-Minimal R example solves successfully
 
