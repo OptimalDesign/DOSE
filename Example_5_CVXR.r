@@ -4,7 +4,7 @@ library(OptimalDesign)
 #---------------- helper functions ----------------------
 #--------------------------------------------------------
 
-MISOCP_ecos_m4 <- function(Fx, b1 = numeric(0), A1 = NULL, b2 = numeric(0), 
+MISOCP_m4 <- function(Fx, b1 = numeric(0), A1 = NULL, b2 = numeric(0), 
           A2 = NULL, b3 = numeric(0), A3 = NULL, bin = FALSE, type = c("exact", "approximate"), 
           gap = NULL, t.max = Inf, solver="MOSEK", mi_max_iters = 3000, 
           mi_abs_eps = 1e-5,  mi_rel_eps = 1e-5, verbose = FALSE) {
@@ -157,7 +157,7 @@ resp2 <- function(x, a, b){
 #---------------- main function -----------------------
 #------------------------------------------------------
 
-CRLAS <- function(x, N, A, C, bk, a, b, type="exact"){
+CRLAS <- function(x, N, A, C, bk, a, b, type="exact", solver="MOSEK"){
   # function for computing constrained exact designs in CR model
   # x: set of doses (size-n vector)
   # N: size of the design (integer)
@@ -230,9 +230,9 @@ CRLAS <- function(x, N, A, C, bk, a, b, type="exact"){
   A3 <- rbind(A31, A32)
   
   if (type=="approximate"){
-    res <- MISOCP_ecos_m4(Fx, b1=b1, A1=A1, b2=b2, A2=A2, b3=b3, A3=A3, type=type)
+    res <- MISOCP_m4(Fx, b1=b1, A1=A1, b2=b2, A2=A2, b3=b3, A3=A3, type=type, solver=solver)
   } else {
-    res <- MISOCP_ecos_m4(Fx, b1=b1, A1=A1, b2=b2, A2=A2, b3=b3, A3=A3, type="exact", gap=0)
+    res <- MISOCP_m4(Fx, b1=b1, A1=A1, b2=b2, A2=A2, b3=b3, A3=A3, type="exact", gap=0, solver=solver)
   }
     
   w.best <- rep(0, lx)
@@ -553,3 +553,4 @@ p5 <- ggplot(df, aes(x = x_jitter, xend = x_jitter, y = 0, yend = value, color =
 
 library(gridExtra)
 grid.arrange(p0, p1, p2, p3, p4, p5, nrow=6)
+
