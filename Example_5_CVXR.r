@@ -3,6 +3,7 @@
 ## The choice of solver can be adjusted by the argument `solver` in the function CRLAS
 ## Available options are "ECOS_BB", "GUROBI" (if installed) and "MOSEK" (if installed)
 ## We strongly recommend using either "GUROBI" or "MOSEK"
+## Users who have GUROBI available, are strongly urged to use the code Example_5.R instead
 
 library(OptimalDesign)
 
@@ -559,5 +560,6 @@ p5 <- ggplot(df, aes(x = x_jitter, xend = x_jitter, y = 0, yend = value, color =
 
 library(gridExtra)
 grid.arrange(p0, p1, p2, p3, p4, p5, nrow=6)
+
 
 
