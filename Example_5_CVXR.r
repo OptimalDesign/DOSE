@@ -1,3 +1,9 @@
+## R script using CVXR to generate designs and Figure 1 from the paper 
+## Optimal Exact Designs of Multiresponse Experiments under Linear and Sparsity Constraints (https://arxiv.org/abs/2507.04713).
+## The choice of solver can be adjusted by the argument `solver` in the function CRLAS
+## Available options are "ECOS_BB", "GUROBI" (if installed) and "MOSEK" (if installed)
+## We strongly recommend using either "GUROBI" or "MOSEK"
+
 library(OptimalDesign)
 
 #--------------------------------------------------------
@@ -6,7 +12,7 @@ library(OptimalDesign)
 
 MISOCP_m4 <- function(Fx, b1 = numeric(0), A1 = NULL, b2 = numeric(0), 
           A2 = NULL, b3 = numeric(0), A3 = NULL, bin = FALSE, type = c("exact", "approximate"), 
-          gap = NULL, t.max = Inf, solver="MOSEK", mi_max_iters = 3000, 
+          gap = NULL, t.max = Inf, solver, mi_max_iters = 3000, 
           mi_abs_eps = 1e-5,  mi_rel_eps = 1e-5, verbose = FALSE) {
   
   type <- match.arg(type)
@@ -553,4 +559,5 @@ p5 <- ggplot(df, aes(x = x_jitter, xend = x_jitter, y = 0, yend = value, color =
 
 library(gridExtra)
 grid.arrange(p0, p1, p2, p3, p4, p5, nrow=6)
+
 
